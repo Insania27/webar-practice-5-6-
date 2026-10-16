@@ -1,0 +1,67 @@
+<!doctype html>
+<!-- Основа: официальный De-Panther WebXR2020, Apache-2.0. -->
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Задание 6 — Unity WebXR</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; }
+    #controls { padding: 8px; }
+    h1 { font-size: 18px; margin: 0 0 8px; }
+    p { margin: 8px 0; }
+    canvas { display: block; width: 100%; height: calc(100dvh - 120px); }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <h1>Задание 6. Unity WebXR</h1>
+    <button id="enterar" disabled>Запустить AR</button>
+    <p id="status" role="status">Загрузка Unity…</p>
+  </div>
+  <canvas id="unity-canvas"></canvas>
+  <script>
+    var unityInstance = null;
+    
+    const canvas = document.querySelector('#unity-canvas');
+    const statusText = document.querySelector('#status');
+    const arButton = document.querySelector('#enterar');
+    let arSupported = false;
+    const config = {
+      dataUrl: 'Build/WebGL.data',
+      frameworkUrl: 'Build/WebGL.framework.js?v=webxr-startup-2',
+      codeUrl: 'Build/WebGL.wasm',
+      streamingAssetsUrl: 'StreamingAssets',
+      companyName: 'Practical',
+      productName: 'Задание 6 — WebXR',
+      productVersion: '1.0',
+      devicePixelRatio: Math.min(window.devicePixelRatio, 1.5),
+      showBanner: (message, type) => { if (type === 'error') statusText.textContent = message; },
+    };
+    document.addEventListener('onARSupportedCheck', event => {
+      arSupported = event.detail.supported;
+      arButton.disabled = !arSupported || !unityInstance;
+      if (unityInstance) showReady();
+    });
+    function showReady() {
+      statusText.textContent = arSupported
+        ? 'Куб находится в центре взгляда. Нажмите «Запустить AR».'
+        : 'Куб показан в обычном режиме. WebXR AR недоступен в этом браузере или на этом устройстве.';
+    }
+    arButton.addEventListener('click', () => { unityInstance.Module.WebXR.toggleAR(); });
+    const loader = document.createElement('script');
+    loader.src = 'Build/WebGL.loader.js?v=webxr-startup-2';
+    loader.onerror = () => { statusText.textContent = 'Не удалось загрузить Unity loader.'; };
+    loader.onload = () => {
+      createUnityInstance(canvas, config, progress => {
+        statusText.textContent = `Загрузка Unity: ${Math.round(progress * 100)}%`;
+      }).then(instance => {
+        unityInstance = instance;
+        arButton.disabled = !arSupported;
+        showReady();
+      }).catch(error => { statusText.textContent = `Ошибка Unity: ${error}`; });
+    };
+    document.body.appendChild(loader);
+  </script>
+</body>
+</html>

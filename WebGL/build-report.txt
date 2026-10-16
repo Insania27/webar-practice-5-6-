@@ -1,0 +1,8 @@
+Result: Succeeded
+Unity: 6000.3.8f1
+Build bytes: 21259997
+Duration: 00:00:03.9980250
+Compression: Disabled
+Compression fallback: false
+Threads: false
+Reference space: viewer

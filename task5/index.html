@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Задание 5</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; }
+    canvas { position: fixed; inset: 0; }
+    #overlay { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+    #controls { padding: 8px; background: white; pointer-events: auto; }
+    h1 { font-size: 18px; margin: 0 0 8px; }
+    p { margin: 8px 0 0; }
+    button, select, input { margin: 2px; }
+  </style>
+  <script type="importmap">
+    {"imports": {
+      "three": "./vendor/three.module.js",
+      "three/addons/": "./vendor/addons/"
+    }}
+  </script>
+</head>
+<body>
+  <div id="overlay">
+    <div id="controls">
+      <h1>Задание 5. Управление объектом</h1>
+      <button id="start" disabled>Запустить AR</button>
+      <button id="end" hidden>Завершить AR</button>
+      <label>Модель <select id="model"><option value="chair">Стул</option><option value="table">Стол</option></select></label>
+      <label>Цвет <input id="color" type="color" value="#336699"></label>
+      <button id="rotate">Повернуть на 15°</button>
+      <p id="status" role="status">Загрузка освещения…</p>
+    </div>
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
